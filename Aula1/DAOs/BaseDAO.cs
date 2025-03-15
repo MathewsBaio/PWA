@@ -6,61 +6,127 @@ namespace Aula1.DAOs;
 
 public abstract class BaseDAO<T> where T : IModel
 {
-    protected abstract string Caminho { get; }
+
+    protected abstract string NomeTabela {get;}
 
     public void Inserir(T obj)
     {
-        dados.Add(obj);
-        Salvar();
-    }
+        string nomesCampos = "";
+        string parametrosCampos = "";
 
-    private void Salvar()
-    {
-        File.WriteAllText(Caminho, JsonSerializer.Serialize(dados));
+        foreach (var nomeProp in GetPropriedades(obj))
+        {
+            nomesCampos += $", {nomeProp.ToLower()}";
+            parametrosCampos += $", @{nomeProp}";
+        }
+
+        string sql = $"INSERT INTO {NomeTabela}" +
+            $" (id, {nomesCampos})" +
+            " values " +
+            $" (@Id, {parametrosCampos})";
+        
+        Executar(sql, obj);
     }
 
     public void Alterar(T obj)
     {
-        var objExistente = dados.FirstOrDefault(x => x.Id == obj.Id);
+        string campos = "";
 
-        if (objExistente == null)
-            throw new Exception("Registro inexistente");
+        foreach (var nomeProp in GetPropriedades(obj))
+        {
+            campos += $"{nomeProp.ToLower()} = @{nomeProp}";
+        }
 
-        dados.Remove(objExistente);
-        dados.Add(obj);
 
-        Salvar();
+        string sql = "UPDATE atleta" +
+            $" SET nome = {campos}" +
+            " WHERE " +
+            " id = @Id";
+
+        Executar(sql, obj);
     }
 
     public void Excluir(long id)
     {
-        var objExistente = dados.FirstOrDefault(x => x.Id == id);
+        string sql = $"DELETE {NomeTabela}" +
+            " WHERE " +
+            " id = @Id";
 
-        if (objExistente == null)
-            throw new Exception("Registro inexistente");
-
-        dados.Remove(objExistente);
-
-        Salvar();
+        Executar(sql, new { Id = id });
     }
 
-    public IList<T> RetornarTodos() => ObterDados();
-
-    public T? RetornarPorId(long id) => ObterDados().FirstOrDefault(x => x.Id == id);
-
-    private IList<T> ObterDados()
+    public IList<Atleta> RetornarTodos()
     {
-        try
-        {
-            var conteudo = File.ReadAllText(Caminho);
+        var campos = "";
 
-            return dados = JsonSerializer.Deserialize<IList<T>>(conteudo) ?? [];
-        }
-        catch
+        foreach (var nomeProp in GetPropriedades(typeof(T)))
         {
-            return [];
+            campos += $",{nomeProp.ToLower()} as {nomeProp}";
         }
+
+        string sql = $"SELECT id as Id {campos}" + 
+            $" FROM {NomeTabela}";
+
+        return Selecionar(sql);
     }
 
-    private static IList<T> dados = [];
+    public T? RetornarPorId(long id)
+    {
+
+        var campos = "";
+
+        foreach (var nomeProp in GetPropriedades(typeof(T)))
+        {
+            campos += $",{nomeProp.ToLower()} as {nomeProp}";
+        }
+
+        string sql = $"SELECT id as Id {campos}" + 
+            $" FROM {NomeTabela}" + 
+            " WHERE id = @id";
+
+        return SelecionarUnico(sql, new { id });
+    }
+
+    private void Executar(string sql, object obj)
+    {
+        using var conexao = new SqliteConnection("Data Source=db/app.db");
+
+        conexao.Open();
+
+        conexao.Execute(sql, obj); 
+    }
+
+    private IList<T> Selecionar(string sql, object? obj = null)
+    {
+        using var conexao = new SqliteConnection("Data Source=db/app.db");
+
+        conexao.Open();
+
+        if (obj == null)
+            return conexao.Query<T>(sql).ToList();
+
+        return conexao.Query<T>(sql, obj).ToList();
+    }
+
+    private T? SelecionarUnico(string sql, object? obj = null)
+    {
+        using var conexao = new SqliteConnection("Data Source=db/app.db");
+
+        conexao.Open();
+
+        if (obj == null)
+            return conexao.QuerySingle<T>(sql);
+
+        return conexao.QuerySingle<T>(sql, obj);
+    }
+
+    private IEnumerable<string> GetPropriedades(T obj)
+    {
+        return GetPropriedades(obj.GetType());
+    }
+
+     private IEnumerable<string> GetPropriedades(Type tipo)
+    {
+        return tipo.GetProperties().Where(x => !x.Name.Equals("Id")).Select(x => x.Name);
+    }
 }

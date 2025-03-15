@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Camillo\\PWA\\Aula1\\Aula1.csproj": {}
+    "C:\\Users\\Mathews\\Documents\\Vianna\\PWA\\Aula1\\Aula1.csproj": {}
   },
   "projects": {
-    "D:\\Camillo\\PWA\\Aula1\\Aula1.csproj": {
+    "C:\\Users\\Mathews\\Documents\\Vianna\\PWA\\Aula1\\Aula1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Camillo\\PWA\\Aula1\\Aula1.csproj",
+        "projectUniqueName": "C:\\Users\\Mathews\\Documents\\Vianna\\PWA\\Aula1\\Aula1.csproj",
         "projectName": "Aula1",
-        "projectPath": "D:\\Camillo\\PWA\\Aula1\\Aula1.csproj",
-        "packagesPath": "C:\\Users\\Aluno\\.nuget\\packages\\",
-        "outputPath": "D:\\Camillo\\PWA\\Aula1\\obj\\",
+        "projectPath": "C:\\Users\\Mathews\\Documents\\Vianna\\PWA\\Aula1\\Aula1.csproj",
+        "packagesPath": "C:\\Users\\Mathews\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mathews\\Documents\\Vianna\\PWA\\Aula1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Aluno\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Mathews\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -76,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
