@@ -1,0 +1,19 @@
+﻿@page "/"
+@namespace AulaBlazor.Components
+
+<PageTitle>Meu Título</PageTitle>
+
+<Ola Nome="Sebatian" />
+
+@{
+    var apresentar = false;
+}
+
+@if (apresentar) 
+{
+    <p>Esta página é um componente Razor</p>
+}
+else 
+{
+    <p>Nada</p>
+}
